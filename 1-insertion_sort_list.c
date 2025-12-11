@@ -7,50 +7,45 @@
 
 void insertion_sort_list(listint_t **list)
 {
-	listint_t *currentNode, *temp, *nextNode;
+    listint_t *currentNode, *nextNode;
 
-	if (!list || !(*list))
-		return;
+    if (!list || !(*list) || !(*list)->next)
+        return;
 
-	currentNode = (*list)->next;
+    currentNode = (*list)->next;
 
-	while (currentNode != NULL)
-	{
-		nextNode = currentNode->next;
-		temp = currentNode->prev;
+    while (currentNode)
+    {
+        nextNode = currentNode->next;
 
-		/*the insertion spot is ......?*/
-		while (temp != NULL && currentNode->n < temp->n)
-			temp = temp->prev;
+        while (currentNode->prev && currentNode->n < currentNode->prev->n)
+        {
+            /* Swap currentNode with previous node */
+            listint_t *prev = currentNode->prev;
+            listint_t *next = currentNode->next;
 
-		/*stitching*/
-		/*end of the sort to the rest of the list*/
-		if (currentNode->prev != NULL)
-			currentNode->prev->next = currentNode->next;
-		/*the rest of the list to the end of the sort*/
-		if (currentNode->next != NULL)
-			currentNode->next->prev = currentNode->prev;
+            /* Stitch prev->prev to currentNode */
+            if (prev->prev)
+                prev->prev->next = currentNode;
+            currentNode->prev = prev->prev;
 
-		/*puts the current node to the head*/
-		if (temp == NULL)
-		{
-			currentNode->prev = NULL;
-			currentNode->next = *list;
-			(*list)->prev = currentNode;
-			*list = currentNode;
-			print_list(*list);
-		}
-		/*the current node goes to a different place*/
-		else
-		{
-			currentNode->next = temp->next;
-			if (temp->next != NULL)
-				temp->next->prev = currentNode;
-			temp->next = currentNode;
-			currentNode->prev = temp;
-			print_list(*list);
-		}
-		currentNode = nextNode;
-	}
+            /* Stitch currentNode to prev */
+            currentNode->next = prev;
+            prev->prev = currentNode;
 
+            /* Stitch prev to next */
+            prev->next = next;
+            if (next)
+                next->prev = prev;
+
+            /* Update head if needed */
+            if (!currentNode->prev)
+                *list = currentNode;
+
+            /* Print after every single swap */
+            print_list(*list);
+        }
+
+        currentNode = nextNode;
+    }
 }
