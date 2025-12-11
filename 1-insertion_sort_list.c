@@ -7,45 +7,43 @@
 
 void insertion_sort_list(listint_t **list)
 {
-    listint_t *currentNode, *nextNode;
+	listint_t *currentNode, *nextNode;
 
-    if (!list || !(*list) || !(*list)->next)
-        return;
+	if (!list || !(*list) || !(*list)->next)
+		return;
 
-    currentNode = (*list)->next;
+	currentNode = (*list)->next;
+	while (currentNode)
+	{
+		nextNode = currentNode->next;
+		while (currentNode->prev &&
+				currentNode->n < currentNode->prev->n)
+		{
+			/* Swap currentNode with previous node */
+			listint_t *prev = currentNode->prev;
+			listint_t *next = currentNode->next;
 
-    while (currentNode)
-    {
-        nextNode = currentNode->next;
+			/* Stitch prev->prev to currentNode */
+			if (prev->prev)
+				prev->prev->next = currentNode;
+			currentNode->prev = prev->prev;
 
-        while (currentNode->prev && currentNode->n < currentNode->prev->n)
-        {
-            /* Swap currentNode with previous node */
-            listint_t *prev = currentNode->prev;
-            listint_t *next = currentNode->next;
+			/* Stitch currentNode to prev */
+			currentNode->next = prev;
+			prev->prev = currentNode;
 
-            /* Stitch prev->prev to currentNode */
-            if (prev->prev)
-                prev->prev->next = currentNode;
-            currentNode->prev = prev->prev;
+			/* Stitch prev to next */
+			prev->next = next;
+			if (next)
+				next->prev = prev;
 
-            /* Stitch currentNode to prev */
-            currentNode->next = prev;
-            prev->prev = currentNode;
+			/* Update head if needed */
+			if (!currentNode->prev)
+				*list = currentNode;
 
-            /* Stitch prev to next */
-            prev->next = next;
-            if (next)
-                next->prev = prev;
-
-            /* Update head if needed */
-            if (!currentNode->prev)
-                *list = currentNode;
-
-            /* Print after every single swap */
-            print_list(*list);
-        }
-
-        currentNode = nextNode;
-    }
+			/* Print after every single swap */
+			print_list(*list);
+		}
+		currentNode = nextNode;
+	}
 }
