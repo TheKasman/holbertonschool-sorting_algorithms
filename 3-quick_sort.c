@@ -23,8 +23,8 @@ static size_t partition(int *arr, size_t n, int *orig, size_t osize)
 			temp = arr[i];
 			arr[i] = arr[j];
 			arr[j] = temp;
-			i++;
 			print_array(orig, osize);
+			i++;
 		}
 	}
 	temp = arr[i];
@@ -60,4 +60,23 @@ void quick_sort(int *array, size_t size)
 
 	quick_sort(array, pivot);
 	quick_sort(array + pivot + 1, size - pivot - 1);
+}
+
+
+/**
+ * main - Entry point
+ *
+ * Return: Always 0
+ */
+int main(void)
+{
+    int array[] = {19, 48, 99, 71, 13, 52, 96, 73, 86, 7};
+    size_t n = sizeof(array) / sizeof(array[0]);
+
+    print_array(array, n);
+    printf("\n");
+    quick_sort(array, n);
+    printf("\n");
+    print_array(array, n);
+    return (0);
 }
