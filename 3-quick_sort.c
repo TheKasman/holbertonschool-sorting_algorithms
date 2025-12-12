@@ -19,7 +19,7 @@ int lomuto_partition(int *array, int low, int high, size_t size)
 		if (array[j] < pivot)
 		{
 			i++;
-			if (i != j) /* avoid redundant swap */
+			if (array[i] != array[j]) /* avoid redundant swap */
 			{
 				tmp = array[i];
 				array[i] = array[j];
@@ -28,7 +28,7 @@ int lomuto_partition(int *array, int low, int high, size_t size)
 			}
 		}
 	}
-	if (i + 1 != high) /* final pivot swap */
+	if (array[i + 1] != array[high]) /* final pivot swap */
 	{
 		tmp = array[i + 1];
 		array[i + 1] = array[high];
