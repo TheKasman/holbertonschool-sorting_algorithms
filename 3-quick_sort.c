@@ -24,12 +24,12 @@ static size_t partition(int *arr, size_t n, int *orig, size_t osize)
 			arr[i] = arr[j];
 			arr[j] = temp;
 			i++;
+			print_array(orig, osize);
 		}
 	}
 	temp = arr[i];
 	arr[i] = arr[n - 1];
 	arr[n - 1] = temp;
-	print_array(orig, osize);
 	return (i);
 }
 
