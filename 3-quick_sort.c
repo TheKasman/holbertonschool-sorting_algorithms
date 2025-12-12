@@ -24,7 +24,6 @@ static size_t partition(int *arr, size_t n, int *orig, size_t osize)
 			arr[i] = arr[j];
 			arr[j] = temp;
 			i++;
-			print_array(orig, osize);
 		}
 	}
 	temp = arr[i];
