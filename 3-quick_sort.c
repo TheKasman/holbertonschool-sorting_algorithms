@@ -1,82 +1,70 @@
 #include "sort.h"
 
 /**
- * partition - helper function for quick sort to create partitions
- * @arr: the array
- * @n: array size
- * @orig: the original bounds of the array
- * @osize: the original size of the array
- * Return: returns
- */
-
-static size_t partition(int *arr, size_t n, int *orig, size_t osize)
+* lomuto_partition - the lomuto partition that was mentinoed
+* @array: the array
+* @low: starting index
+* @high: the end index
+* @size: the size of the array
+* Return: returns index of pivot after partition
+*/
+int lomuto_partition(int *array, int low, int high, size_t size)
 {
-	int pivot, temp;
-	size_t i = 0, j;
+	int pivot = array[high];
+	int i = low - 1;
+	int j, tmp;
 
-	pivot = arr[n - 1];
-
-	for (j = 0; j < n - 1; j++)
+	for (j = low; j < high; j++)
 	{
-		if (arr[j] < pivot)
+		if (array[j] < pivot)
 		{
-			temp = arr[i];
-			arr[i] = arr[j];
-			arr[j] = temp;
-			print_array(orig, osize);
 			i++;
+			if (i != j) /* avoid redundant swap */
+			{
+				tmp = array[i];
+				array[i] = array[j];
+				array[j] = tmp;
+				print_array(array, size);
+			}
 		}
 	}
-	temp = arr[i];
-	arr[i] = arr[n - 1];
-	arr[n - 1] = temp;
-	return (i);
+	if (i + 1 != high) /* final pivot swap */
+	{
+		tmp = array[i + 1];
+		array[i + 1] = array[high];
+		array[high] = tmp;
+		print_array(array, size);
+	}
+	return (i + 1);
 }
 
+/**
+* quicksort_rec - Recursive quicksort
+* @array: Array of integers
+* @low: Starting index
+* @high: Ending index
+* @size: Size of array
+*/
+
+void quicksort_rec(int *array, int low, int high, size_t size)
+{
+	if (low < high)
+	{
+		int p = lomuto_partition(array, low, high, size);
+
+		quicksort_rec(array, low, p - 1, size);
+		quicksort_rec(array, p + 1, high, size);
+	}
+}
 
 /**
- * quick_sort - uses quick sort (splits the array up using a pivot and go)
- * @array: the array
- * @size: the sizeof the array
- */
-
+* quick_sort - Sorts an array of integers using Quick sort
+* @array: Array of integers
+* @size: Size of array
+*/
 void quick_sort(int *array, size_t size)
 {
-	size_t pivot;
-	static int *original;
-	static size_t orig_size;
-
-	if (!original)
-	{
-		original = array;
-		orig_size = size;
-	}
-
-	/*base case!*/
-	if (size <= 1)
+	if (!array || size < 2)
 		return;
-
-	pivot = partition(array, size, original, orig_size);
-
-	quick_sort(array, pivot);
-	quick_sort(array + pivot + 1, size - pivot - 1);
-}
-
-
-/**
- * main - Entry point
- *
- * Return: Always 0
- */
-int main(void)
-{
-    int array[] = {19, 48, 99, 71, 13, 52, 96, 73, 86, 7};
-    size_t n = sizeof(array) / sizeof(array[0]);
-
-    print_array(array, n);
-    printf("\n");
-    quick_sort(array, n);
-    printf("\n");
-    print_array(array, n);
-    return (0);
+	quicksort_rec(array, 0, (int)size - 1, size);
 }
